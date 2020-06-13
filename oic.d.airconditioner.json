@@ -1,0 +1,34 @@
+{
+    "mapType" : {
+        "capability":[
+            ["switch"],
+            ["thermostatcoolingsetpoint"],
+            ["thermostatheatingsetpoiny"],
+            ["temperaturemeasurement"],
+            ["relativehumidity"],
+            ["fanspeed"],
+            ["thermostatsetpoint"],
+            ["airconditionermode"]
+        ],
+        "resourceType":[
+            ["oic.r.switch.binary"],
+            ["oic.r.temperature"],
+            ["oic.r.temperature"],
+            ["oic.r.temperature"],
+            ["oic.r.humidity"],
+            ["oic.r.airflow"],
+            ["oic.r.temperature"],
+            ["oic.r.mode"]
+        ],
+        "resourceHref":[
+            "/powerswich",
+            "/coolingtargettemperature",
+            "/heatingtargetttemperture",
+            "/currenttemperature",
+            "/humidity",
+            "/airflow",
+            "/targettempearature",
+            "/operationalmode"
+        ]
+    }
+}
