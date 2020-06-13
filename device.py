@@ -12,6 +12,7 @@ from kivy.properties import NumericProperty
 from kivy.properties import ListProperty
 from kivy.uix.screenmanager import Screen , ScreenManager
 
+from customize import customizePage 
  
 class devicePage(BoxLayout):
     #print(self.selectedDevice)
@@ -30,7 +31,6 @@ class devicePage(BoxLayout):
             self.add_widget(b_button)
             return
         data = json.load(f)
-        print(data)
         content = BoxLayout(orientation = 'horizontal', size_hint_y = .2  )
         content.add_widget(Label(text='OCF Resource Tool' , font_size = 30))
         self.add_widget(content)
@@ -44,15 +44,18 @@ class devicePage(BoxLayout):
         self.add_widget(content)
     
         content = BoxLayout(orientation='vertical' , spacing = 10 , padding = [70,20,100,20])
-        resources =  data['mapType']['resourceType']
+        self.resources =  data['mapType']['resourceType']
         href = data['mapType']['resourceHref']
-        for i in range(len(resources)):
+        self.modf = {}
+        for i in range(len(self.resources)):
+            self.modf[i] = [False,""]
+        for i in range(len(self.resources)):
             minContent = BoxLayout(orientation='horizontal')
-            self.selected[resources[i][0]] = CheckBox(active=False,size_hint_x = .3)
-            minContent.add_widget(self.selected[resources[i][0]])
-            minContent.add_widget(Label(text=resources[i][0] , size_hint_x= .4))
-            var = TextInput(text=href[i] , multiline=False)
-            minContent.add_widget(var)
+            self.selected[i] = CheckBox(size_hint_x = .3)
+            minContent.add_widget(self.selected[i])
+            minContent.add_widget(Label(text=self.resources[i][0] , size_hint_x= .4))
+            self.selected[-(i+1)] = TextInput(text=href[i] , multiline=False)
+            minContent.add_widget(self.selected[-(i+1)])
             content.add_widget(minContent)
         self.add_widget(content)
 
@@ -61,9 +64,24 @@ class devicePage(BoxLayout):
         b_button.bind(on_release = lambda x:self.goToHomepage())
         content.add_widget(b_button)
         n_button = Button(text='Next' , size_hint = (.1,.5) , pos_hint = {'x':.55 , 'y' : .2})
+        n_button.bind(on_release = lambda x:self.goToNextpage())
         content.add_widget(n_button)
         self.add_widget(content)
-
+    
 
     def goToHomepage(self):
+        App.get_running_app().screenManager.transition.direction = 'right' 
         App.get_running_app().screenManager.current = 'home'
+        #self.manager.current = 'home'
+
+    def goToNextpage(self ):
+        for i in range(len(self.resources)):
+            self.modf[i][0] = self.selected[i].active
+            self.modf[i][1] = self.selected[-(i+1)].text
+        self.CustomizePage = customizePage(self.id ,self.modf)
+        screen = Screen(name='customize')
+        screen.add_widget(self.CustomizePage)
+        App.get_running_app().screenManager.add_widget(screen)
+        App.get_running_app().screenManager.transition.direction = 'left' 
+        App.get_running_app().screenManager.current = 'customize'
+

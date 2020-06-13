@@ -30,5 +30,43 @@
             "/targettempearature",
             "/operationalmode"
         ]
+    },
+    "mapData" : {
+        "switch" : {
+            "attributeType" :["string"],
+            "valueMap":{
+                "STValue" : ["on" , "off"],
+                "OCFValue" : [true , false]
+            }
+        },
+        "thermostatcoolingsetpoint" :{
+            "attributeType" :["number",null]
+        },
+        "thermostatheatingsetpoiny" :{
+            "attributeType" :["number",null]
+        },
+        "temperaturemeasurement":{
+            "attributeType" :["number",null]
+        },
+        "relativehumidity":{
+            "attributeType" :["number"]
+        },
+        "fanspeed":{
+            "attributeType" :["number"]
+        },
+        "thermostatsetpoint":{
+            "attributeType" :["number" , null]
+
+        },
+        "airconditionermode":{
+            "attributeType" :[null , "string"],
+            "valueMap" :[
+                null,
+                {
+                    "STValue":["ai","cool","dry","wind","auto","coolClean","dryClean"],
+                    "OCFValue":["artificial","cooling","drying","winding","automatic","coolClean","dryClean"]
+                }
+            ]
+        }
     }
 }

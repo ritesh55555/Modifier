@@ -16,8 +16,7 @@ from kivy.uix.screenmanager import Screen , ScreenManager
 
 from device import devicePage 
 
-
-class home(BoxLayout):
+class home(BoxLayout ):
     def __init__(self , **kwargs):
         super().__init__(**kwargs)
         #self.device = ['oic.d.airconditioner' , 'oic.d.airpurifier']
@@ -35,6 +34,7 @@ class home(BoxLayout):
         screen = Screen(name='device')
         screen.add_widget(self.DevicePage)
         modifier.screenManager.add_widget(screen)
+        modifier.screenManager.transition.direction = 'left' 
         modifier.screenManager.current = 'device'
         
 
