@@ -60,13 +60,11 @@
         },
         "airconditionermode":{
             "attributeType" :[null , "string"],
-            "valueMap" :[
-                null,
+            "valueMap" :
                 {
                     "STValue":["ai","cool","dry","wind","auto","coolClean","dryClean"],
                     "OCFValue":["artificial","cooling","drying","winding","automatic","coolClean","dryClean"]
                 }
-            ]
         }
     }
 }
