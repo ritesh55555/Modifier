@@ -7,6 +7,8 @@ from kivy.uix.checkbox import CheckBox
 from kivy.uix.textinput import TextInput
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.gridlayout import GridLayout
+from kivy.uix.scrollview import ScrollView
 from kivy.properties import ObjectProperty
 from kivy.properties import NumericProperty
 from kivy.properties import ListProperty
@@ -23,7 +25,7 @@ class devicePage(BoxLayout):
         self.selected = {}
         self.orientation = 'vertical'
         try :
-            f = open(f"{self.id}.json")
+            f = open(f"devices\{self.id}.json")
         except :
             self.add_widget(Label(text="File not found",font_size = 30))
             b_button = Button(text='Back' )
@@ -40,10 +42,10 @@ class devicePage(BoxLayout):
         self.add_widget(content)
 
         content = BoxLayout(orientation = 'horizontal' , size_hint_y = .1  )
-        content.add_widget(Label(text='Resource Type                           Resource Href' ,font_size = 20))
+        content.add_widget(Label(text='      Resource Type                           Resource Href' ,font_size = 20))
         self.add_widget(content)
     
-        content = BoxLayout(orientation='vertical' , spacing = 10 , padding = [70,20,100,20])
+        content = GridLayout(cols = 1 , padding = (10,10) , spacing = (10,10) ,size_hint_y = None ,height = self.minimum_height , row_default_height = 35)
         self.resources =  data['mapType']['resourceType']
         href = data['mapType']['resourceHref']
         self.modf = {}
@@ -51,13 +53,15 @@ class devicePage(BoxLayout):
             self.modf[i] = [False,""]
         for i in range(len(self.resources)):
             minContent = BoxLayout(orientation='horizontal')
-            self.selected[i] = CheckBox(size_hint_x = .3)
+            self.selected[i] = CheckBox(size_hint_x = .5)
             minContent.add_widget(self.selected[i])
             minContent.add_widget(Label(text=self.resources[i][0] , size_hint_x= .4))
             self.selected[-(i+1)] = TextInput(text=href[i] , multiline=False)
             minContent.add_widget(self.selected[-(i+1)])
             content.add_widget(minContent)
-        self.add_widget(content)
+        scroll = ScrollView()
+        scroll.add_widget(content)
+        self.add_widget(scroll)
 
         content = FloatLayout(size_hint_y = .2)
         b_button = Button(text='Back' , size_hint = (.1,.5) , pos_hint = {'x':.35 , 'y' : .2})

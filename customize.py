@@ -7,6 +7,8 @@ from kivy.uix.checkbox import CheckBox
 from kivy.uix.textinput import TextInput
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.popup import Popup
+from kivy.uix.scrollview import ScrollView
+from kivy.uix.gridlayout import GridLayout
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.screenmanager import Screen , ScreenManager
@@ -18,18 +20,15 @@ class customizePage(BoxLayout):
         super().__init__(**kwargs)
         self.deviceid = did
         self.modf = modif
-        f = open(f"{self.deviceid}.json")
+        f = open(f"devices\{self.deviceid}.json")
         self.data = json.load(f)
-        self.newData = self.data.copy()
+        #self.newData = self.data.copy()
+        self.newData = {"mapType" : {"capability":[], "resourceType":[],"resourceHref":[]} , "mapData" : {}}
         
         self.orientation = "vertical"
 
         #data required to display
-        self.resource = []
-        for i in range(len(self.data['mapType']['resourceType'])):
-            if self.modf[i][0] == True :
-                self.resource.append(i)
-
+        
         #title box
         content = BoxLayout(orientation = 'horizontal', size_hint_y = .2  )
         content.add_widget(Label(text='OCF Resource Tool' , font_size = 30))
@@ -41,40 +40,34 @@ class customizePage(BoxLayout):
         self.add_widget(content)
 
         #scrollbox
-        content = BoxLayout(orientation="vertical" , padding = 20)
-        for i in range(len(self.resource)):
-            #each resuorce type box
-            string1 = self.data['mapType']['resourceType'][self.resource[i]][0]
-            string2 = self.data['mapType']['capability'][self.resource[i]][0]
-            self.newData['mapType']['resourceHref'][self.resource[i]] = self.modf[self.resource[i]][1]
-
-            minContent = BoxLayout(orientation="horizontal")
-            minContent.add_widget(Label(text = string1 + self.modf[self.resource[i]][1] , size_hint_x = .5 ))
-            content.add_widget(minContent)
-            if "valueMap" in self.data['mapData'][string2] :
-                arr1 = self.data['mapData'][string2]["valueMap"]["STValue"]
-                arr2 = self.data['mapData'][string2]["valueMap"]["OCFValue"]
-                for j in range(len(arr1)):
+        scroll = ScrollView()
+        content = GridLayout(cols = 1 , padding = (10,10) , spacing = (10,10) ,size_hint_y = None  , row_default_height = 35)
+        content.bind(minimum_height=content.setter('height'))
+        for i in range(len(self.data['mapType']['resourceType'])):
+            string1 = self.data['mapType']['resourceType'][i][0]
+            string2 = self.data['mapType']['capability'][i][0]
+            if self.modf[i][0] == True :
+                self.newData["mapType"]["capability"].append(self.data["mapType"]["capability"][i])
+                self.newData["mapType"]["resourceType"].append(self.data["mapType"]["resourceType"][i])
+                self.newData["mapType"]["resourceHref"].append(self.modf[i][1])
+                self.newData["mapData"][string2] =  self.data["mapData"][string2]
+            
+                if "valueMap" in self.data['mapData'][string2] :
                     minContent = BoxLayout(orientation="horizontal")
-                    minContent.add_widget(CheckBox())
-                    minContent.add_widget(Label(text=str(arr2[j])))
-                    minContent.add_widget(Label(text = "OIC Resource Mapping value"))
-                    minContent.add_widget(TextInput(text = arr1[j]))
+                    minContent.add_widget(Label(text = string1 + self.modf[i][1] , size_hint_x = .5 ))
                     content.add_widget(minContent)
+                    arr1 = self.data['mapData'][string2]["valueMap"][0]["STValue"]
+                    arr2 = self.data['mapData'][string2]["valueMap"][0]["OCFValue"]
+                    for j in range(len(arr1)):
+                        minContent = BoxLayout(orientation="horizontal")
+                        minContent.add_widget(CheckBox())
+                        minContent.add_widget(Label(text=arr1[j]))
+                        minContent.add_widget(Label(text = "OIC Resource Mapping value"))
+                        minContent.add_widget(TextInput(text = str(arr2[j])))
+                        content.add_widget(minContent)
 
-            else :
-                minContent = BoxLayout(orientation="horizontal")
-                minContent.add_widget(CheckBox())
-                minContent.add_widget(Label(text="Minimum Value"))
-                minContent.add_widget(TextInput())
-                content.add_widget(minContent)
-                minContent = BoxLayout(orientation="horizontal")
-                minContent.add_widget(CheckBox())
-                minContent.add_widget(Label(text="Maximunm Value"))
-                minContent.add_widget(TextInput())
-                content.add_widget(minContent)
-        
-        self.add_widget(content)
+        scroll.add_widget(content)
+        self.add_widget(scroll)
         
         #Generate button
         content  = FloatLayout(size_hint_y = .2)
@@ -91,9 +84,10 @@ class customizePage(BoxLayout):
         App.get_running_app().screenManager.current = 'device'
 
     def generateJSON(self):
+        print (json.dumps(self.newData, sort_keys=True, indent=4))
         popup = Popup(title='JSON file',size_hint=(.9, .9))
         popup.content = BoxLayout(orientation="vertical")
-        popup.content.add_widget(Label(text="hi there"))
+        popup.content.add_widget(Label(text="Click Download button to save the updated JSON file in the current folder"))
         layout = FloatLayout(size_hint_y = .2)
         button = Button(text=' Close ', size_hint = (.2,.4) , pos_hint = {'x':.3 , 'y' : .4} )
         button.bind(on_press=popup.dismiss)
