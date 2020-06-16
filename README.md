@@ -11,6 +11,12 @@
  
  you can also prefer installation of kivy from [here](https://kivy.org/doc/stable/installation/installation-windows.html) <br />
  
+### Running the application
+1. go to the directory where you have clone this repo <br />
+2. Run `python app.py` and application will start
+
+
+ 
  
   
   
