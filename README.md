@@ -1,5 +1,5 @@
 # Modifier
-## To run the application you should have the following requirements :
+### To run the application you should have the following requirements :
  1. python installed <br />
  2. Kivy installed <br />
  
@@ -24,7 +24,7 @@
  
  ### To do 
  1. user interface is quite dull
- 2. back in every page doesn't work properly . Once you click next button , you will be unable to go to back and change options 
+ 2. back in every page doesn't work properly . Once you click next button , you will be able to go back but can't change options 
  
  
 
