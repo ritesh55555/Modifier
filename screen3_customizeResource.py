@@ -14,10 +14,11 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.screenmanager import Screen , ScreenManager
 
 
-class customizePage(BoxLayout):
+class customizeScreen(BoxLayout):
 
     def __init__(self, did , modif   , **kwargs):
         super().__init__(**kwargs)
+        #storing parameter from previous class
         self.deviceid = did
         self.modf = modif
         f = open(f"devices\{self.deviceid}.json")
@@ -30,6 +31,7 @@ class customizePage(BoxLayout):
         
         #layout design 
         self.orientation = "vertical"
+        self.padding = [20,20,20,20]
 
         #title box
         content = BoxLayout(orientation = 'horizontal', size_hint_y = .2  )
@@ -41,7 +43,7 @@ class customizePage(BoxLayout):
         content.add_widget(Label(text='Customize Selected Resource type for ' + self.deviceid , font_size = 20))
         self.add_widget(content)
 
-        #scrollbox for customizing items
+        #####################scrollbox for customizing items########################
         scroll = ScrollView()
         content = GridLayout(cols = 1 , padding = (10,10) , spacing = (10,10) ,size_hint_y = None  , row_default_height = 35)
         content.bind(minimum_height=content.setter('height'))
@@ -51,82 +53,100 @@ class customizePage(BoxLayout):
         #dictionary for checkbox to check if command is selected
         self.checkbox = {}
 
-        #only include resources that were previuosly selected
+        cnt = 0 
         for i in range(len(self.data['mapType']['resourceType'])):
-            string1 = self.data['mapType']['resourceType'][i][0]
-            string2 = self.data['mapType']['capability'][i][0]
+
+            resourceType = self.data['mapType']['resourceType'][i][0]
+            capability = self.data['mapType']['capability'][i][0]
+            
+            #only include resources that were previuosly selected
             if self.modf[i][0] == True :
 
                 #store updated values in new dictionary
-                self.newData["mapType"]["capability"].append(self.data["mapType"]["capability"][i])
-                self.newData["mapType"]["resourceType"].append(self.data["mapType"]["resourceType"][i])
+                self.newData["mapType"]["capability"].append([capability])
+                self.newData["mapType"]["resourceType"].append([resourceType])
                 self.newData["mapType"]["resourceHref"].append(self.modf[i][1])
-                self.newData["mapData"][string2] =  self.data["mapData"][string2]
+                self.newData["mapData"][capability] =  self.data["mapData"][capability]
             
-                if "valueMap" in self.data['mapData'][string2] :
+                if "valueMap" in self.data['mapData'][capability] :
+                    cnt = cnt + 1
                     #creating layout for commands that need to be customized
 
                     minContent = BoxLayout(orientation="horizontal")
-                    minContent.add_widget(Label(text = string1 + self.modf[i][1] , size_hint_x = .5 ))
+                    minContent.add_widget(Label(text = resourceType + "   " + self.modf[i][1] ,font_size = 18 ))
                     content.add_widget(minContent)
                     
                     #add the capability in updatedCommand and checkbox
-                    self.updatedCommand[string2] = []
-                    self.checkbox[string2] = []
+                    self.updatedCommand[capability] = []
+                    self.checkbox[capability] = []
                     
                     #data of map Values
-                    arr1 = self.data['mapData'][string2]["valueMap"][0]["STValue"]
-                    arr2 = self.data['mapData'][string2]["valueMap"][0]["OCFValue"]
+                    arr1 = self.data['mapData'][capability]["valueMap"][0]["STValue"]
+                    arr2 = self.data['mapData'][capability]["valueMap"][0]["OCFValue"]
                     for j in range(len(arr1)):
                         #layout for each command
                         minContent = BoxLayout(orientation="horizontal")
 
                         #adding checkbox
-                        self.checkbox[string2].append( CheckBox() )
-                        minContent.add_widget(self.checkbox[string2][j])
+                        self.checkbox[capability].append( CheckBox(size_hint_x = .2) )
+                        minContent.add_widget(self.checkbox[capability][j])
                         
                         #adding required mapping labels
                         minContent.add_widget(Label(text=arr1[j]))
                         minContent.add_widget(Label(text = "OIC Resource Mapping value"))
                         
                         #adding boxes
-                        self.updatedCommand[string2].append(TextInput(text = str(arr2[j])))
-                        minContent.add_widget(self.updatedCommand[string2][j])
+                        self.updatedCommand[capability].append(TextInput(text = str(arr2[j]) ))
+                        minContent.add_widget(self.updatedCommand[capability][j])
                         content.add_widget(minContent)
+        
+        if cnt == 0 :
+            content.add_widget(Label(text = "There are no resources to be customize",font_size = 30))
+            content.add_widget(Label(text = "click on generate button to produce required JSON file"))
 
         scroll.add_widget(content)
         self.add_widget(scroll)
 
+        ############################################################################
+
         
-        #Generate button
+        #Generate button and back button
         content  = FloatLayout(size_hint_y = .2)
+
         back = Button(text = "Back" , size_hint = (.2,.4) , pos_hint = {'x':.3 , 'y' : .4})
         back.bind(on_release =lambda x:self.goBack())
         content.add_widget(back)
+
         generate = Button(text = "Generate" , size_hint = (.2,.4) , pos_hint = {'x':.5 , 'y' : .4})
         generate.bind(on_release = lambda x:self.generateJSON())
         content.add_widget(generate)
+
         self.add_widget(content)
+
+
 
     #function to go to previous page
     def goBack(self):
         App.get_running_app().screenManager.transition.direction = 'right' 
-        App.get_running_app().screenManager.current = 'device'
+        App.get_running_app().screenManager.current = 'resourceScreen'
 
 
 
     #function to open a popup that has option to download modified file
     def generateJSON(self):
         
-        ##### update the self.newData with customized command   #####
+        ##### update the self.newData with customized command   ######
+
         for i in range(len(self.data['mapType']['resourceType'])):
             capability = self.data['mapType']['capability'][i][0]
             if (self.modf[i][0] == True) and ("valueMap" in self.data['mapData'][capability]):
                 for j in range(len(self.checkbox[capability])) :
                     if self.checkbox[capability][j].active == True:
                         self.newData['mapData'][capability]["valueMap"][0]["OCFValue"][j] = self.updatedCommand[capability][j].text
+        
         ###############################################################
-        print (json.dumps(self.newData,sort_keys=True, indent=2))
+        
+    
         # adding popup
         popup = Popup(title='JSON file',size_hint=(.9, .9))
         popup.content = BoxLayout(orientation="vertical")

@@ -9,21 +9,23 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.scrollview import ScrollView
-from kivy.properties import ObjectProperty
-from kivy.properties import NumericProperty
-from kivy.properties import ListProperty
 from kivy.uix.screenmanager import Screen , ScreenManager
 
-from customize import customizePage 
+from screen3_customizeResource import customizeScreen
  
-class devicePage(BoxLayout):
-    #print(self.selectedDevice)
-    #Builder.load_file('device.kv')
-    def __init__(self ,deviceId , **kwargs):
+class resourceScreen( BoxLayout):
+    
+    def __init__(self ,deviceid ,  **kwargs):
         super().__init__(**kwargs)
-        self.id = deviceId
+        self.id = deviceid
+
+        #self.selected will store the values of selected resources
         self.selected = {}
+
+        #layout property
         self.orientation = 'vertical'
+
+        # Error handling if you have not selected anything or if file not present 
         try :
             f = open(f"devices\{self.id}.json")
         except :
@@ -32,7 +34,11 @@ class devicePage(BoxLayout):
             b_button.bind(on_release = lambda x:self.goToHomepage())
             self.add_widget(b_button)
             return
+
+        #data store the device json file
         data = json.load(f)
+
+        ################  layouts for title and heading   #############
         content = BoxLayout(orientation = 'horizontal', size_hint_y = .2  )
         content.add_widget(Label(text='OCF Resource Tool' , font_size = 30))
         self.add_widget(content)
@@ -44,48 +50,77 @@ class devicePage(BoxLayout):
         content = BoxLayout(orientation = 'horizontal' , size_hint_y = .1  )
         content.add_widget(Label(text='      Resource Type                           Resource Href' ,font_size = 20))
         self.add_widget(content)
-    
+        ##################################################################
+
+
+        ##########   loop to control the number of resoruce typr for specific device  #########
         content = GridLayout(cols = 1 , padding = (10,10) , spacing = (10,10) ,size_hint_y = None ,height = self.minimum_height , row_default_height = 35)
+        
+        #variable for storing device resouceType and href 
         self.resources =  data['mapType']['resourceType']
         href = data['mapType']['resourceHref']
         self.modf = {}
+
+        #initializing every checkbox to False(not selected)
         for i in range(len(self.resources)):
             self.modf[i] = [False,""]
+
         for i in range(len(self.resources)):
+            #layout for each resourceType and checkbox and input box
             minContent = BoxLayout(orientation='horizontal')
+
             self.selected[i] = CheckBox(size_hint_x = .5)
             minContent.add_widget(self.selected[i])
+            
             minContent.add_widget(Label(text=self.resources[i][0] , size_hint_x= .4))
+
             self.selected[-(i+1)] = TextInput(text=href[i] , multiline=False)
             minContent.add_widget(self.selected[-(i+1)])
+
             content.add_widget(minContent)
+
         scroll = ScrollView()
         scroll.add_widget(content)
         self.add_widget(scroll)
 
+        #buttons for next(n_button) and back(b_button)
         content = FloatLayout(size_hint_y = .2)
+
         b_button = Button(text='Back' , size_hint = (.1,.5) , pos_hint = {'x':.35 , 'y' : .2})
-        b_button.bind(on_release = lambda x:self.goToHomepage())
+        b_button.bind(on_release = lambda x:self.goToDevicepage())
         content.add_widget(b_button)
+
         n_button = Button(text='Next' , size_hint = (.1,.5) , pos_hint = {'x':.55 , 'y' : .2})
-        n_button.bind(on_release = lambda x:self.goToNextpage())
+        n_button.bind(on_release = lambda x:self.goToCustomizepage())
         content.add_widget(n_button)
+
         self.add_widget(content)
+     
+    ######################################################################################
+
+
+    #function that changes screen to starting screen
+    def goToDevicepage(self):
+        App.get_running_app().screenManager.transition.direction = 'right' 
+        App.get_running_app().screenManager.current = 'deviceScreen'
     
 
-    def goToHomepage(self):
-        App.get_running_app().screenManager.transition.direction = 'right' 
-        App.get_running_app().screenManager.current = 'home'
-        #self.manager.current = 'home'
+    ########## IMPORTANT MESSAGE ( TO DO ) ###############
+    ##  back button or goToDevicepage not working properly
 
-    def goToNextpage(self ):
+    #function that changes screen to custoimze screen
+    def goToCustomizepage(self ):
+        #storing the resources datas that were selected and updated in self.modf
+        #and will be passed as a parameter for customize screen class
         for i in range(len(self.resources)):
             self.modf[i][0] = self.selected[i].active
             self.modf[i][1] = self.selected[-(i+1)].text
-        self.CustomizePage = customizePage(self.id ,self.modf)
-        screen = Screen(name='customize')
-        screen.add_widget(self.CustomizePage)
+        
+        #making customize screen and changing screen
+        self.CustomizeScreen = customizeScreen(self.id ,self.modf)
+        screen = Screen(name='customizeScreen')
+        screen.add_widget(self.CustomizeScreen)
         App.get_running_app().screenManager.add_widget(screen)
         App.get_running_app().screenManager.transition.direction = 'left' 
-        App.get_running_app().screenManager.current = 'customize'
-
+        App.get_running_app().screenManager.current = 'customizeScreen'
+        
