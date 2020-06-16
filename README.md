@@ -8,5 +8,9 @@
  2.execute `python -m pip install --upgrade pip wheel setuptools virtualenv`  <br />
  3.install dependencies by executing `python -m pip install docutils pygments pypiwin32 kivy_deps.sdl2==0.1.* kivy_deps.glew==0.1.*` <br />
  4.install kivy : `python -m pip install kivy` <br />
+ 
+ you can also prefer installation of kivy from [here](https://kivy.org/doc/stable/installation/installation-windows.html) <br />
+ 
+ 
   
   
