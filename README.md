@@ -4,10 +4,10 @@
  2. Kivy installed <br />
  
 ### Installing kivy 
- 1.open your command prompt<br />
- 2.execute `python -m pip install --upgrade pip wheel setuptools virtualenv`  <br />
- 3.execute `python -m pip install docutils pygments pypiwin32 kivy_deps.sdl2==0.1.* kivy_deps.glew==0.1.*` <br />
- 4.install kivy : `python -m pip install kivy` <br />
+ 1. open your command prompt<br />
+ 2. execute `python -m pip install --upgrade pip wheel setuptools virtualenv`  <br />
+ 3. execute `python -m pip install docutils pygments pypiwin32 kivy_deps.sdl2==0.1.* kivy_deps.glew==0.1.*` <br />
+ 4. install kivy : `python -m pip install kivy` <br />
  
  you can also prefer installation of kivy from [here](https://kivy.org/doc/stable/installation/installation-windows.html) <br />
  
@@ -21,6 +21,12 @@
  - screen1_device.kv : code to display first page that contains the options to select device
  - screen2_resource.py : code to display second page to select specific resource type
  - screen3_customizeResource.py : code to display last page that has options to customize command
+ 
+ ### To do 
+ 1. user interface is quite dull
+ 2. back in every page doesn't work properly . Once you click next button , you will be unable to go to back and change options 
+ 
+ 
 
 
  
