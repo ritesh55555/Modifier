@@ -1,5 +1,7 @@
 import kivy
 import json 
+import re
+from _ctypes import PyObj_FromPtr
 from kivy.app import App
 from kivy.uix.button import Button
 from kivy.uix.label import Label
@@ -99,9 +101,16 @@ class customizeScreen(BoxLayout):
                         self.updatedCommand[capability].append(TextInput(text = str(arr2[j]) ))
                         minContent.add_widget(self.updatedCommand[capability][j])
                         content.add_widget(minContent)
+
+                else :
+                    cnt += 1
+                    minContent = BoxLayout(orientation="horizontal")
+                    minContent.add_widget(Label(text = resourceType + "   " + self.modf[i][1]  + "   :-  " + "No customization required",font_size = 18 ))
+                    content.add_widget(minContent)
+
         
         if cnt == 0 :
-            content.add_widget(Label(text = "There are no resources to be customize",font_size = 30))
+            content.add_widget(Label(text = "You have not selected any resources",font_size = 30))
             content.add_widget(Label(text = "click on generate button to produce required JSON file"))
 
         scroll.add_widget(content)
@@ -170,4 +179,73 @@ class customizeScreen(BoxLayout):
     #function to download the file in the same folder
     def downloadFile(self):
         with open(f'new_{self.deviceid}.json', 'w') as fp:
-            json.dump(self.newData, fp,  indent=2)
+            json.dump(self.newData, fp, indent=2 , separators=(',', ':') ,cls= MyJSONEncoder)
+
+
+
+
+####### for proper representation of json file ###########################
+
+
+class MyJSONEncoder(json.JSONEncoder):
+
+  def iterencode(self, o, _one_shot=False):
+    yield """{  \n "mapType":  """
+    list_lvl = 0
+    for s in super(MyJSONEncoder, self).iterencode(o["mapType"], _one_shot=_one_shot):
+      #print(s)
+      #print("end")
+      if s.startswith('[') and list_lvl == 0  : 
+        list_lvl += 1   
+      elif s.startswith('[') and list_lvl > 0 :
+        list_lvl += 1
+        s = s.replace('\n      ', '').rstrip()
+      elif s.startswith("\n") and list_lvl>1  :
+        s = s.replace('\n', '').strip()   
+      elif 0 < list_lvl: 
+        if s and s[-1] == ',':
+          s = s[:-1]  + self.item_separator   
+        elif s and s[-1] == ':':
+          s = s[:-1] + self.key_separator    
+      if s.endswith(','):
+        s = s.replace('', '\n').rstrip()  
+      if s.endswith(']'):
+        list_lvl -= 1  
+        
+      yield s
+    
+    yield ",\n"
+    yield """ "mapData" : """
+    
+    list_lvl = 0
+    cnt = 0 
+    for s in super(MyJSONEncoder, self).iterencode(o["mapData"], _one_shot=_one_shot):
+
+      if s.startswith('[') and s.endswith(' '):
+        list_lvl += 1
+      elif s.startswith('[')  : 
+        list_lvl += 1   
+        s = s.replace('\n      ', '').rstrip()  
+      elif s.startswith(':') :
+        s = s.replace('', " ")
+      elif s.startswith("\n") and list_lvl >= 1  :
+        s = s.replace('\n', '').strip()   
+      elif s.startswith(',') and list_lvl >= 1 :
+        s = s.replace('\n     ' , '')
+      elif s.startswith('"STValue"') :
+        s = s.replace('','\n        ',1)
+      elif s.startswith('"OCFValue"') :
+        s = s.replace('','\n        ',1)
+        cnt = 1
+      elif s.startswith('}'):
+        if cnt > 0 :
+            s = s.replace('','\n      ',1)
+      if s.endswith(']'):
+        if cnt > 0 and list_lvl == 1 :
+            s = s.replace('' , '\n    ' , 1)
+            cnt -= 1
+        list_lvl -= 1  
+        
+      yield s
+    
+    yield "\n}"

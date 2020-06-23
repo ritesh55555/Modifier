@@ -29,9 +29,9 @@ class resourceScreen( BoxLayout):
         try :
             f = open(f"devices\{self.id}.json")
         except :
-            self.add_widget(Label(text="File not found",font_size = 30))
-            b_button = Button(text='Back' )
-            b_button.bind(on_release = lambda x:self.goToHomepage())
+            self.add_widget(Label(text="You have not selected any device",font_size = 30))
+            b_button = Button(text='Back', size_hint = (.1,.1) , pos_hint ={'x':.45, 'y':.5} )
+            b_button.bind(on_release = lambda x:self.goToDevicepage())
             self.add_widget(b_button)
             return
 
@@ -48,7 +48,7 @@ class resourceScreen( BoxLayout):
         self.add_widget(content)
 
         content = BoxLayout(orientation = 'horizontal' , size_hint_y = .1  )
-        content.add_widget(Label(text='      Resource Type                           Resource Href' ,font_size = 20))
+        content.add_widget(Label(text='Select                   Capability                       Resource Type                      Resource Href' ,font_size = 20))
         self.add_widget(content)
         ##################################################################
 
@@ -59,6 +59,7 @@ class resourceScreen( BoxLayout):
         #variable for storing device resouceType and href 
         self.resources =  data['mapType']['resourceType']
         href = data['mapType']['resourceHref']
+        capability = data['mapType']['capability']
         self.modf = {}
 
         #initializing every checkbox to False(not selected)
@@ -71,10 +72,12 @@ class resourceScreen( BoxLayout):
 
             self.selected[i] = CheckBox(size_hint_x = .5)
             minContent.add_widget(self.selected[i])
-            
-            minContent.add_widget(Label(text=self.resources[i][0] , size_hint_x= .4))
 
-            self.selected[-(i+1)] = TextInput(text=href[i] , multiline=False)
+            minContent.add_widget(Label(text=capability[i][0] ))
+            
+            minContent.add_widget(Label(text=self.resources[i][0] ))
+
+            self.selected[-(i+1)] = TextInput(text=href[i] , multiline=False) 
             minContent.add_widget(self.selected[-(i+1)])
 
             content.add_widget(minContent)
@@ -124,3 +127,4 @@ class resourceScreen( BoxLayout):
         App.get_running_app().screenManager.transition.direction = 'left' 
         App.get_running_app().screenManager.current = 'customizeScreen'
         
+

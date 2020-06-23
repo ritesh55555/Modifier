@@ -1,22 +1,32 @@
 <deviceScreen>:
         
     orientation : "vertical"  
+    # canvas.before:
+    #     Color:
+    #         rgba: 1, 1, 1, 1
+    #     Rectangle:
+    #         # self here refers to the widget i.e FloatLayout
+    #         pos: self.pos
+    #         size: self.size
 
     Label:
         text : 'OCF Resource Tool'
         font_size : 30
         spacing : [20,20]
         size_hint_y : .2
+        #color : 0,0,0,1
 
     Label:
         text : 'Select the OCF device type'
         font_size : 20
         size_hint_y : .1
         size_hint_x : .5
+        ##color : 0,0,0,1
 
     ScrollView:
 
         GridLayout:
+        
             cols : 1
             padding : 10,10
             spacing : 10,10
@@ -33,9 +43,11 @@
                     value : root.device[0]
                     on_active : root.deviceSelect(0)
                     size_hint_x : .2
+                    color : 1,1,1,1
                 Label:
                     text : root.device_name[0]
                     size_hint_x : .5
+                    ##color : 0,0,0,1
             BoxLayout :
                 orientation : 'horizontal'
                 size_hint_x : .5
@@ -45,9 +57,11 @@
                     value : root.device[1]
                     on_active : root.deviceSelect(1)
                     size_hint_x : .2
+                    #color : 0,0,0,1
                 Label:
                     text : root.device_name[1] 
                     size_hint_x : .5 
+                    #color : 0,0,0,1
             BoxLayout :
                 orientation : 'horizontal'
                 size_hint_x : .5
@@ -57,9 +71,11 @@
                     value : root.device[2]
                     on_active : root.deviceSelect(2)
                     size_hint_x : .2
+                    #color : 0,0,0,1
                 Label:
                     text : root.device_name[2] 
                     size_hint_x : .5
+                    #color : 0,0,0,1
             BoxLayout :
                 orientation : 'horizontal'
                 size_hint_x : .5
@@ -69,9 +85,11 @@
                     value : root.device[3]
                     on_active : root.deviceSelect(3)
                     size_hint_x : .2
+                    #color : 0,0,0,1
                 Label:
                     text : root.device_name[3] 
                     size_hint_x : .5
+                    #color : 0,0,0,1
             BoxLayout :
                 orientation : 'horizontal'
                 size_hint_x : .5
@@ -81,9 +99,11 @@
                     value : root.device[4]
                     on_active : root.deviceSelect(4)
                     size_hint_x : .2
+                    #color : 0,0,0,1
                 Label:
                     text : root.device_name[4] 
                     size_hint_x : .5
+                    #color : 0,0,0,1
             BoxLayout :
                 orientation : 'horizontal'
                 size_hint_x : .5
@@ -93,9 +113,11 @@
                     value : root.device[5]
                     on_active : root.deviceSelect(5)
                     size_hint_x : .2
+                    #color : 0,0,0,1
                 Label:
                     text : root.device_name[5]
                     size_hint_x : .5    
+                    #color : 0,0,0,1
             BoxLayout :
                 orientation : 'horizontal'
                 size_hint_x : .5
@@ -105,9 +127,11 @@
                     value : root.device[6]
                     on_active : root.deviceSelect(6)
                     size_hint_x : .2
+                    ##color : 0,0,0,1
                 Label:
                     text : root.device_name[6]
                     size_hint_x : .5 
+                    ##color : 0,0,0,1
             BoxLayout :
                 orientation : 'horizontal'
                 size_hint_x : .5
@@ -117,9 +141,11 @@
                     value : root.device[7]
                     on_active : root.deviceSelect(7)
                     size_hint_x : .2
+                    #color : 0,0,0,1
                 Label:
                     text : root.device_name[7]
                     size_hint_x : .5 
+                    #color : 0,0,0,1
             BoxLayout :
                 orientation : 'horizontal'
                 size_hint_x : .5
@@ -129,9 +155,11 @@
                     value : root.device[8]
                     on_active : root.deviceSelect(8)
                     size_hint_x : .2
+                    #color : 0,0,0,1
                 Label:
                     text : root.device_name[8]
                     size_hint_x : .5 
+                    #color : 0,0,0,1
             BoxLayout :
                 orientation : 'horizontal'
                 size_hint_x : .5
@@ -141,9 +169,12 @@
                     value : root.device[9]
                     on_active : root.deviceSelect(9)
                     size_hint_x : .2
+                    #color : 0,0,0,1
+                    
                 Label:
                     text : root.device_name[9]
                     size_hint_x : .5 
+                    #color : 0,0,0,1
             BoxLayout :
                 orientation : 'horizontal'
                 size_hint_x : .5
@@ -153,9 +184,11 @@
                     value : root.device[10]
                     on_active : root.deviceSelect(10)
                     size_hint_x : .2
+                    #color : 0,0,0,1
                 Label:
                     text : root.device_name[10]
                     size_hint_x : .5 
+                    #color : 0,0,0,1
             BoxLayout :
                 orientation : 'horizontal'
                 size_hint_x : .5
@@ -165,9 +198,11 @@
                     value : root.device[11]
                     on_active : root.deviceSelect(11)
                     size_hint_x : .2
+                    #color : 0,0,0,1
                 Label:
                     text : root.device_name[11]
-                    size_hint_x : .5 
+                    size_hint_x : .5
+                    #color : 0,0,0,1 
             BoxLayout :
                 orientation : 'horizontal'
                 size_hint_x : .5
@@ -177,9 +212,11 @@
                     value : root.device[12]
                     on_active : root.deviceSelect(12)
                     size_hint_x : .2
+                    #color : 0,0,0,1
                 Label:
                     text : root.device_name[12]
                     size_hint_x : .5 
+                    #color : 0,0,0,1
             BoxLayout :
                 orientation : 'horizontal'
                 size_hint_x : .5
@@ -189,9 +226,11 @@
                     value : root.device[13]
                     on_active : root.deviceSelect(13)
                     size_hint_x : .2
+                    #color : 0,0,0,1
                 Label:
                     text : root.device_name[13]
                     size_hint_x : .5 
+                    #color : 0,0,0,1
             BoxLayout :
                 orientation : 'horizontal'
                 size_hint_x : .5
@@ -201,9 +240,11 @@
                     value : root.device[14]
                     on_active : root.deviceSelect(14)
                     size_hint_x : .2
+                    #color : 0,0,0,1
                 Label:
                     text : root.device_name[14]
                     size_hint_x : .5 
+                    #color : 0,0,0,1
             
     FloatLayout:
         size_hint_y : .2
