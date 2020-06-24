@@ -24,7 +24,6 @@
  
  ### To do 
  1. user interface is quite dull
- 2. back in every page doesn't work properly . Once you click next button , you will be able to go back but can't change options 
  
  
 
