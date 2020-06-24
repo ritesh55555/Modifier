@@ -15,9 +15,11 @@ from screen3_customizeResource import customizeScreen
  
 class resourceScreen( BoxLayout):
     
-    def __init__(self ,deviceid ,  **kwargs):
+    def __init__(self ,deviceid , cnt ,  **kwargs):
         super().__init__(**kwargs)
         self.id = deviceid
+        self.cnt = cnt 
+        self.cnt1 = 0
 
         #self.selected will store the values of selected resources
         self.selected = {}
@@ -120,11 +122,12 @@ class resourceScreen( BoxLayout):
             self.modf[i][1] = self.selected[-(i+1)].text
         
         #making customize screen and changing screen
-        self.CustomizeScreen = customizeScreen(self.id ,self.modf)
-        screen = Screen(name='customizeScreen')
+        self.CustomizeScreen = customizeScreen(self.id ,self.modf , self.cnt )
+        self.cnt1 += 1
+        screen = Screen(name=f'customizeScreen{self.cnt1}')
         screen.add_widget(self.CustomizeScreen)
         App.get_running_app().screenManager.add_widget(screen)
         App.get_running_app().screenManager.transition.direction = 'left' 
-        App.get_running_app().screenManager.current = 'customizeScreen'
+        App.get_running_app().screenManager.current = f'customizeScreen{self.cnt1}'
         
 

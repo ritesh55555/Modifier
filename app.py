@@ -20,6 +20,7 @@ class deviceScreen(BoxLayout):
         super().__init__(**kwargs)
         
         self.ResourceScreen = None
+        self.cnt = 0 
 
     #storing all the device's json file name to use later   
     device_name = ListProperty(['oic.d.airconditioner' , 'oic.d.airpurifier','oic.d.dishwasher','oic.d.dryer','oic.d.light','oic.d.oven','oic.d.refrigerator','oic.d.robotcleaner','oic.d.sensor','oic.d.smartlock' , 'oic.d.smartplug', 'oic.d.switch','oic.d.thermostat','oic.d.tv','oic.d.washer'])
@@ -40,14 +41,14 @@ class deviceScreen(BoxLayout):
 
         # making a new screen of select resource with the help of imported clas
         # pass the device name parameter in the class 
-        self.ResourceScreen = resourceScreen(self.selectedDevice)
-        screen = Screen(name='resourceScreen')
+        self.cnt += 1
+        self.ResourceScreen = resourceScreen(self.selectedDevice , self.cnt )
+        screen = Screen(name=f'resourceScreen{self.cnt}')
         screen.add_widget(self.ResourceScreen)
-
         #changing screen to resource screen
         modifier.screenManager.add_widget(screen)
         modifier.screenManager.transition.direction = 'left' 
-        modifier.screenManager.current = 'resourceScreen'
+        modifier.screenManager.current = f'resourceScreen{self.cnt}'
         
         
 

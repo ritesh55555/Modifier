@@ -18,11 +18,12 @@ from kivy.uix.screenmanager import Screen , ScreenManager
 
 class customizeScreen(BoxLayout):
 
-    def __init__(self, did , modif   , **kwargs):
+    def __init__(self, did , modif , cnt , **kwargs):
         super().__init__(**kwargs)
         #storing parameter from previous class
         self.deviceid = did
         self.modf = modif
+        self.cnt = cnt 
         f = open(f"devices\{self.deviceid}.json")
 
         #unmodified json data
@@ -137,7 +138,7 @@ class customizeScreen(BoxLayout):
     #function to go to previous page
     def goBack(self):
         App.get_running_app().screenManager.transition.direction = 'right' 
-        App.get_running_app().screenManager.current = 'resourceScreen'
+        App.get_running_app().screenManager.current = f'resourceScreen{self.cnt}'
 
 
 
